@@ -3,19 +3,19 @@ import tasks from '../db/index';
 export function createTable(){
     tasks.transaction((tx) => {
         tx.executeSQL(
-            `CREATE TABLE IF NOT EXISTS Tasks (
+            `CREATE TABLE IF NOT EXISTS tasks (
                 id          INTEGER PRIMARY KEY AUTOINCREMENT,
                 title       TEXT,
                 category    TEXT,
                 description TEXT
-            )
+            );
             `,
             [],
             (_, error) => {
                 console.log('Algo deu errado na criação de tabela: ' + error);
             }
-        )
-    })
+        );
+    });
 }
 
 export async function createTask(task){
@@ -23,7 +23,7 @@ export async function createTask(task){
         tasks.transaction((tx) => {
             tx.executeSQL(
                 `
-                    INSERT INTO desks(title, category, description) 
+                    INSERT INTO tasks(title, category, description) 
                     VALUES (?, ?, ?);
                 `,
                 [
@@ -31,17 +31,14 @@ export async function createTask(task){
                     task.category,
                     task.description
                 ],
-                (_,
-                 ({rowsAffected, insertId}) => {
-                    if(rowsAffected > 0) resolve(insertId);
+                (_, {rowsAffected, insert_id}) => {
+                    if(rowsAffected > 0) resolve(insert_id);
                     else reject 
-                    ('Algo deu errado ao tentar adicionar uma nova nota!1: ' + JSON.stringify);
-                 },
-                 (_, error) => {
+                    ('Algo deu errado ao tentar adicionar uma nova nota!1: ' + JSON.stringify(task));
+                },
+                (_, error) => {
                     reject('Algo deu errado ao tentar adicionar uma nova nota!2:' + error)
-                 }
-                )
-
+                }
             )
         })
     })
@@ -58,8 +55,8 @@ export async function selectTask(category = '*'){
             }
 
             tx.executeSQL(comand, [],
-                (transaction, result) => {
-                    resolve(result,rows._array);
+                (transaction, response) => {
+                    resolve(response.rows._array);
                 },
                 (_, error) => reject('Algo deu errado ao tentar carregar a(s) nota(s): ' + error)
             )

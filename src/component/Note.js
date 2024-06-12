@@ -35,18 +35,19 @@ const styleFunction = (color) => {StyleSheet.create({
         borderColor:       color,
 
         shadowColor:       '#000',
+        shadowOpacity:     0.20,
+        shadowRadius:      3,
         shadowOffset: {
             width:  0,
             height: 2
         },
-        shadowOpacity:     0.20,
-        shadowRadius:      3,
+
         elevation:         4
 
     },
     title: {
         fontSize:          24,
-        fontWeight:        '600',
+        fontWeight:        '700',
         marginBottom:      4
 
     },
